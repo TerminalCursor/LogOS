@@ -10,9 +10,6 @@ os-image-raw.bin: 000boot/boot.bin kernel/kernel.bin
 os-image.bin: os-image-raw.bin
 	dd if=$< of=$@ bs=100M conv=sync
 
-run: os-image.bin
-	cp $< "/mnt/c/Users/Zealot Spartan/Desktop/LogOS/"
-
 %.o: %.asm
 	nasm $< -f elf -o $@
 
@@ -29,4 +26,4 @@ clean:
 backup:
 	cp -r ./ ../backups.d/LogOS
 
-.PHONY: backup clean run
+.PHONY: backup clean
