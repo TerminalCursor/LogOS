@@ -1,0 +1,3 @@
+getch:
+	mov ah, 0x00
+	int 0x16
