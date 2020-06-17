@@ -2,13 +2,14 @@
 # $< = first dependency
 # $^ = all dependencies
 #
+.PHONY: backup clean
 
 # First rule is run by default
-os-image-raw.bin: 000boot/boot.bin kernel/kernel.bin
-	cat $^ > $@
-
 os-image.bin: os-image-raw.bin
 	dd if=$< of=$@ bs=100M conv=sync
+
+os-image-raw.bin: 000boot/boot.bin kernel/kernel.bin
+	cat $^ > $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@
@@ -25,5 +26,3 @@ clean:
 
 backup:
 	cp -r ./ ../backups.d/LogOS
-
-.PHONY: backup clean
