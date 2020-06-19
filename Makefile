@@ -1,7 +1,7 @@
 # $@ = target file
 # $< = first dependency
 # $^ = all dependencies
-#
+
 .PHONY: backup clean
 
 # First rule is run by default
