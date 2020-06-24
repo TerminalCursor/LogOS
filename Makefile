@@ -2,7 +2,7 @@
 # $< = first dependency
 # $^ = all dependencies
 
-.PHONY: backup clean
+.PHONY: backup clean cleanobj
 
 # First rule is run by default
 os-image.bin: os-image-raw.bin
@@ -17,12 +17,19 @@ os-image-raw.bin: 000boot/boot.bin kernel/kernel.bin
 %.bin: %.asm
 	nasm $< -f bin -o $@
 
-clean:
-	rm -rf *.bin *.o
-	rm -rf 000boot/*.bin 000boot/*.o
-	rm -rf 000boot/16/*.bin 000boot/16/*.o
-	rm -rf 000boot/32/*.bin 000boot/32/*.o
-	rm -rf kernel/*.bin kernel/*.o
+clean: cleanobj
+	rm -rf *.bin
+	rm -rf 000boot/*.bin
+	rm -rf 000boot/16/*.bin
+	rm -rf 000boot/32/*.bin
+	rm -rf kernel/*.bin
+
+cleanobj:
+	rm -rf *.o
+	rm -rf 000boot/*.o
+	rm -rf 000boot/16/*.o
+	rm -rf 000boot/32/*.o
+	rm -rf kernel/*.o
 
 backup:
 	cp -r ./ ../backups.d/LogOS
