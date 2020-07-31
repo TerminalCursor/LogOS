@@ -16,7 +16,7 @@ call shutdown
 ret
 
 MSG_KERNEL_LOADED db "LogOS Kernel Loaded!", 0 ; Zero Terminated String
-MSG_HELLO db "Hello, this is Christian Cunningham's LogOS", 0
+MSG_HELLO db "Hello, this is LogOS", 0
 ; this is how constants are defined
 VIDEO_MEMORY equ 0xb8000
 VIDEO_MEMORY_MAX equ 0x7D0
