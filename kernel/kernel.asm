@@ -7,8 +7,8 @@ _main:
 ; Clear the screen
 call clear_screen
 
-; Write text on the third line starting at the second character of the line
-mov eax, 0x3
+; Write text on the tenth line starting at the second character of the line
+mov eax, 0xA
 mov edx, 0x2
 call get_offset
 mov ebx, MSG_KERNEL_LOADED
@@ -39,7 +39,7 @@ call kprint_ch
 call advance_cursor_offset
 
 ; Scroll screen up 1 line
-;call scroll_up
+call scroll_up
 
 ; Rudimentary wait to exit ~ 7 seconds
 ; TODO: Make a better wait function
@@ -56,7 +56,7 @@ ret
 
 ; Messages
 MSG_KERNEL_LOADED db "LogOS Kernel Loaded!", 0 ; Zero Terminated String
-MSG_HELLO db "LogOS successfully started!", 0x0A, "Hello!", 0
+MSG_HELLO db "LogOS successfully started!", 0x0A, "Hello!", 0x0A, 0x0A, "Testing", 0x0A, "Test", 0
 ; this is how constants are defined
 VIDEO_MEMORY equ 0xb8000
 VIDEO_MEMORY_MAX equ 0x7D0
