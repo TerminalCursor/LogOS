@@ -27,7 +27,7 @@ mov BYTE [ecx], 0x43
 inc ecx
 mov BYTE [ecx], WHITE_ON_BLACK
 
-; Rudimentary wait to exit ~ 14 seconds
+; Rudimentary wait to exit ~ 7 seconds
 ; TODO: Make a better wait function
 mov eax, 0xFFFFFFFF
 wait_loop:
