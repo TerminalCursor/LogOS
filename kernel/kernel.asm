@@ -2,6 +2,7 @@
 [org 0x1000]
 ; using 32-bit protected mode
 [bits 32]
+jmp _main
 _main:
 ; Clear the screen
 call clear_screen
@@ -17,6 +18,42 @@ mov ecx, 0x50
 lea ecx, [5 + 5 * ecx]
 mov ebx, MSG_HELLO
 call print_string_pm
+
+;
+; GET CURSOR POSITION
+;
+
+xor bx, bx	; Place to store cursor position
+xor ax, ax	; Place to store cursor position
+
+; Request high byte of cursor position - stored in 0x3d5
+mov eax, 14
+mov dx, 0x3d4
+out dx, eax
+
+; Store high byte of cursor position into bx
+mov dx, 0x3d5
+in al, dx
+mov bx, ax
+
+; Request low byte of cursor position
+mov eax, 15
+mov dx, 0x3d4
+
+; Add high byte of cursor position
+mov dx, 0x3d5
+in al, dx
+add bx, ax
+
+; Display 'A' at the cursor position
+add ebx, VIDEO_MEMORY
+mov BYTE [ebx], 0x41
+inc ebx
+mov BYTE [ebx], WHITE_ON_BLACK
+
+;
+; END GET CURSOR POSITION
+;
 
 ; Shutdown the machine
 call shutdown
