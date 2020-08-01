@@ -6,17 +6,17 @@ KERNEL_OFFSET equ 0x1000	;; The same we use when linking the kernel
 	mov sp, bp
 
 	call clear_screen	;; Clear the screen
-	push 0x0000
+	push 0x0305
 	call move_cursor	;; Move the cursor to the top left
 
 	mov bx, MSG_REAL_MODE
 	call print ; This will be written after the BIOS messages
 
-	push 0x0200
-	call move_cursor	;; Move the cursor to the top left
-
 	mov ah, 0x00	;; Get character input
 	int 0x16
+
+	push 0x0803
+	call move_cursor	;; Move the cursor to the top left
 
 	call load_kernel
 	call switch_to_pm

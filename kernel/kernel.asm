@@ -19,6 +19,12 @@ lea ecx, [5 + 5 * ecx]
 mov ebx, MSG_HELLO
 call print_string_pm
 
+; Set the cursor to (0x8, 0x3)
+mov ebx, 0x8
+add ebx, 0xF0 ; 0x50 + 0x50 + 0x50
+shl ebx, 1
+call set_cursor_pos
+
 ; Display 'C' at the cursor position
 xor ecx, ecx
 call get_cursor_pos	; Stores cursor position in ecx
@@ -70,33 +76,67 @@ _screen_clear_loop:
     popa
     ret
 
+set_cursor_pos:
+	;
+	; GET CURSOR POSITION
+	;
+
+	xor ax, ax	; Clear out register
+
+	shr bx, 1
+
+	mov eax, 14
+	mov dx, 0x3d4
+	out dx, al
+
+	mov al, bh
+	mov dx, 0x3d5
+	out dx, al
+
+	mov eax, 15
+	mov dx, 0x3d4
+	out dx, al
+
+	mov al, bl
+	mov dx, 0x3d5
+	out dx, al
+
+	;
+	; END GET CURSOR POSITION
+	;
+	ret
+
 get_cursor_pos:
 	;
 	; GET CURSOR POSITION
 	;
-	
+
 	xor cx, cx	; Place to store cursor position
 	xor ax, ax	; Clear out register
-	
+
 	; Request high byte of cursor position - stored in 0x3d5
 	mov eax, 14
 	mov dx, 0x3d4
-	out dx, eax
-	
-	; Store high byte of cursor position into bx
+	out dx, al
+
+	; Store high byte of cursor position into ch
 	mov dx, 0x3d5
 	in al, dx
-	mov cx, ax
-	
+
+	mov ch, al
+
 	; Request low byte of cursor position
 	mov eax, 15
 	mov dx, 0x3d4
-	
+	out dx, al
+
 	; Add high byte of cursor position
 	mov dx, 0x3d5
 	in al, dx
-	add cx, ax
-	
+
+	add cl, al
+	shl cx, 1
+
 	;
 	; END GET CURSOR POSITION
 	;
