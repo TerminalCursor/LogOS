@@ -23,11 +23,11 @@ call print_string_pm
 mov ebx, 0x8
 add ebx, 0xF0 ; 0x50 + 0x50 + 0x50
 shl ebx, 1
-call set_cursor_pos
+call set_cursor_offset
 
-; Display 'C' at the cursor position
+; Display 'C' at the cursor offset
 xor ecx, ecx
-call get_cursor_pos	; Stores cursor position in ecx
+call get_cursor_offset	; Stores cursor offset in ecx
 add ecx, VIDEO_MEMORY
 mov BYTE [ecx], 0x43
 inc ecx
@@ -76,9 +76,9 @@ _screen_clear_loop:
     popa
     ret
 
-set_cursor_pos:
+set_cursor_offset:
 	;
-	; GET CURSOR POSITION
+	; GET CURSOR OFFSET
 	;
 
 	xor ax, ax	; Clear out register
@@ -102,35 +102,35 @@ set_cursor_pos:
 	out dx, al
 
 	;
-	; END GET CURSOR POSITION
+	; END GET CURSOR OFFSET
 	;
 	ret
 
-get_cursor_pos:
+get_cursor_offset:
 	;
-	; GET CURSOR POSITION
+	; GET CURSOR OFFSET
 	;
 
-	xor cx, cx	; Place to store cursor position
+	xor cx, cx	; Place to store cursor offset
 	xor ax, ax	; Clear out register
 
-	; Request high byte of cursor position - stored in 0x3d5
+	; Request high byte of cursor offset - stored in 0x3d5
 	mov eax, 14
 	mov dx, 0x3d4
 	out dx, al
 
-	; Store high byte of cursor position into ch
+	; Store high byte of cursor offset into ch
 	mov dx, 0x3d5
 	in al, dx
 
 	mov ch, al
 
-	; Request low byte of cursor position
+	; Request low byte of cursor offset
 	mov eax, 15
 	mov dx, 0x3d4
 	out dx, al
 
-	; Add high byte of cursor position
+	; Add high byte of cursor offset
 	mov dx, 0x3d5
 	in al, dx
 
@@ -138,7 +138,7 @@ get_cursor_pos:
 	shl cx, 1
 
 	;
-	; END GET CURSOR POSITION
+	; END GET CURSOR OFFSET
 	;
 	ret
 
