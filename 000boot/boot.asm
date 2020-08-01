@@ -47,13 +47,13 @@ BEGIN_PM: ; after the switch we will get here
 	mov ebx, MSG_PROT_MODE
 	call print_string_pm ; Note that this will be written at the top left corner
 	call KERNEL_OFFSET	;; Switch control to kernel
-	jmp $
+	jmp $	;; Halt if kernel switches execution back to bootloader
 
 BOOT_DRIVE db 0
 MSG_REAL_MODE db "Started LogOS in 16-bit real mode", 0
 MSG_PROT_MODE db "Loaded LogOS in 32-bit protected mode", 0
 MSG_LOAD_KERNEL db "Loading LogOS kernel...", 0
 
-; bootsector
+; bootsector marker
 times 510-($-$$) db 0
 dw 0xaa55
