@@ -19,41 +19,20 @@ lea ecx, [5 + 5 * ecx]
 mov ebx, MSG_HELLO
 call print_string_pm
 
-;
-; GET CURSOR POSITION
-;
+; Display 'C' at the cursor position
+xor ecx, ecx
+call get_cursor_pos	; Stores cursor position in ecx
+add ecx, VIDEO_MEMORY
+mov BYTE [ecx], 0x43
+inc ecx
+mov BYTE [ecx], WHITE_ON_BLACK
 
-xor bx, bx	; Place to store cursor position
-xor ax, ax	; Place to store cursor position
-
-; Request high byte of cursor position - stored in 0x3d5
-mov eax, 14
-mov dx, 0x3d4
-out dx, eax
-
-; Store high byte of cursor position into bx
-mov dx, 0x3d5
-in al, dx
-mov bx, ax
-
-; Request low byte of cursor position
-mov eax, 15
-mov dx, 0x3d4
-
-; Add high byte of cursor position
-mov dx, 0x3d5
-in al, dx
-add bx, ax
-
-; Display 'A' at the cursor position
-add ebx, VIDEO_MEMORY
-mov BYTE [ebx], 0x41
-inc ebx
-mov BYTE [ebx], WHITE_ON_BLACK
-
-;
-; END GET CURSOR POSITION
-;
+; Rudimentary wait to exit ~ 14 seconds
+; TODO: Make a better wait function
+mov eax, 0xFFFFFFFF
+wait_loop:
+sub eax, 1
+jnz wait_loop
 
 ; Shutdown the machine
 call shutdown
@@ -90,6 +69,38 @@ _screen_clear_loop:
 
     popa
     ret
+
+get_cursor_pos:
+	;
+	; GET CURSOR POSITION
+	;
+	
+	xor cx, cx	; Place to store cursor position
+	xor ax, ax	; Clear out register
+	
+	; Request high byte of cursor position - stored in 0x3d5
+	mov eax, 14
+	mov dx, 0x3d4
+	out dx, eax
+	
+	; Store high byte of cursor position into bx
+	mov dx, 0x3d5
+	in al, dx
+	mov cx, ax
+	
+	; Request low byte of cursor position
+	mov eax, 15
+	mov dx, 0x3d4
+	
+	; Add high byte of cursor position
+	mov dx, 0x3d5
+	in al, dx
+	add cx, ax
+	
+	;
+	; END GET CURSOR POSITION
+	;
+	ret
 
 ; Shutdown definition
 shutdown:
