@@ -5,7 +5,7 @@
 .PHONY: backup clean cleanobj run
 
 # First rule is run by default
-#os-image.bin: os-image-raw.bin
+#imago-dei.bin: imago-dei.bin
 #	dd if=$< of=$@ bs=100M conv=sync
 #
 
@@ -36,4 +36,5 @@ cleanobj:
 	rm -rf Eden/*.o
 
 backup:
-	cp -r ./ ../backups.d/LogOS
+	mkdir -p ../DeadSeaScrolls.d/LogOS/
+	cp -r ./ ../DeadSeaScrolls.d/LogOS/
