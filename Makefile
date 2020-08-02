@@ -9,7 +9,7 @@
 #	dd if=$< of=$@ bs=100M conv=sync
 #
 
-os-image-raw.bin: 000boot/boot.bin kernel/kernel.bin
+imago-dei.bin: 000Genesis/genesis.bin Eden/eden.bin
 	cat $^ > $@
 
 %.o: %.asm
@@ -18,22 +18,22 @@ os-image-raw.bin: 000boot/boot.bin kernel/kernel.bin
 %.bin: %.asm
 	nasm $< -f bin -o $@
 
-run: os-image-raw.bin
+run: imago-dei.bin
 	qemu-system-x86_64 -fda $<
 
 clean: cleanobj
 	rm -rf *.bin
-	rm -rf 000boot/*.bin
-	rm -rf 000boot/16/*.bin
-	rm -rf 000boot/32/*.bin
-	rm -rf kernel/*.bin
+	rm -rf 000Genesis/*.bin
+	rm -rf 000Genesis/16/*.bin
+	rm -rf 000Genesis/32/*.bin
+	rm -rf Eden/*.bin
 
 cleanobj:
 	rm -rf *.o
-	rm -rf 000boot/*.o
-	rm -rf 000boot/16/*.o
-	rm -rf 000boot/32/*.o
-	rm -rf kernel/*.o
+	rm -rf 000Genesis/*.o
+	rm -rf 000Genesis/16/*.o
+	rm -rf 000Genesis/32/*.o
+	rm -rf Eden/*.o
 
 backup:
 	cp -r ./ ../backups.d/LogOS
