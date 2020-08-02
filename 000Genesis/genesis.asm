@@ -30,7 +30,7 @@ KERNEL_OFFSET equ 0x1000	;; The same we use when linking the kernel
 %include "000Genesis/16/disk.asm"
 %include "000Genesis/32/gdt.asm"
 %include "000Genesis/32/print.asm"
-%include "000Genesis/32/exodus.asm"
+%include "000Genesis/32/third_day.asm"
 
 [bits 16]
 load_kernel:
@@ -53,8 +53,8 @@ BEGIN_PM: ; after the switch we will get here
 
 BOOT_DRIVE db 0
 MSG_REAL_MODE db "LogOS: Firmament loaded", 0
-MSG_LOAD_KERNEL db "LogOS: Loading Eden...", 0
-MSG_PROT_MODE db "LogOS: Sea successfully separated by land!", 0
+MSG_LOAD_KERNEL db "LogOS: Separating seas...", 0
+MSG_PROT_MODE db "LogOS: Seas successfully separated by land!", 0
 
 ; bootsector marker
 times 510-($-$$) db 0
