@@ -5,11 +5,11 @@
 .PHONY: backup clean cleanobj run
 
 # First rule is run by default
-#imago-dei.bin: imago-dei.bin
+#LogOS.bin: LogOS.bin
 #	dd if=$< of=$@ bs=100M conv=sync
 #
 
-imago-dei.bin: 000Genesis/genesis.bin Eden/eden.bin
+LogOS.bin: 000Genesis/genesis.bin Eden/eden.bin
 	cat $^ > $@
 
 %.o: %.asm
@@ -18,7 +18,7 @@ imago-dei.bin: 000Genesis/genesis.bin Eden/eden.bin
 %.bin: %.asm
 	nasm $< -f bin -o $@
 
-run: imago-dei.bin
+run: LogOS.bin
 	qemu-system-x86_64 -fda $<
 
 clean: cleanobj

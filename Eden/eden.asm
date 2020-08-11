@@ -74,6 +74,7 @@ WHITE_ON_BLACK equ 0x17 ; the color byte for each character
 %include "Scrolls/sys.asm"
 %include "Scrolls/mem.asm"
 %include "Scrolls/screen.asm"
+%include "Spirit/idt.asm"
 
 wait_b:
 _wait_loop:
