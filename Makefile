@@ -5,7 +5,7 @@
 .PHONY: backup clean cleanobj run
 
 # First rule is run by default
-#LogOS.bin: LogOS.bin
+#LogOS.aligned.bin: LogOS.bin
 #	dd if=$< of=$@ bs=100M conv=sync
 #
 
