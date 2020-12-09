@@ -22,27 +22,12 @@ call get_offset
 mov ebx, MSG_HELLO
 call kprint_at
 
-; Set the cursor to (0x0, 0x3)
-mov eax, 0x3
+; Write text at (0x0, 0x3)
+mov eax, 0x2
 mov edx, 0x0
 call get_offset
-call set_cursor_offset
-
-; Display 'L' at the cursor offset
-mov al, 0x4C
-call kprint_ch
-; Display 'O' at the cursor offset
-mov al, 0x6F
-call kprint_ch
-; Display 'G' at the cursor offset
-mov al, 0x67
-call kprint_ch
-; Display 'O' at the cursor offset
-mov al, 0x4F
-call kprint_ch
-; Display 'S' at the cursor offset
-mov al, 0x53
-call kprint_ch
+mov ebx, OS_NAME
+call kprint_at
 
 	mov eax, 0x6
 	mov edx, 0x0
@@ -144,6 +129,7 @@ ret
 MSG_KERNEL_LOADED db "Eden Loaded!", 0 ; Zero Terminated String
 MSG_HELLO db "In the beginning, God created the heavens and the earth", 0
 BASE_HEX db "0x00000000", 0 ; Zero Terminated
+OS_NAME db "LogOS", 0		; Zero Terminated
 ; this is how constants are defined
 VIDEO_MEMORY equ 0xb8000
 VIDEO_MEMORY_MAX equ 0x7D0
