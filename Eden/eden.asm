@@ -218,8 +218,10 @@ output_stack_16:
 	push eax
 	push edx
 	call get_offset
+	push ebx
 	mov ebx, BASE_HEX
 	call kprint_at
+	pop ebx
 	; Move to (0x2, 0x7)
 	mov eax, 0xA
 	mov edx, 0x2
@@ -241,8 +243,10 @@ output_stack_32:
 	push eax
 	push edx
 	call get_offset
+	push ebx
 	mov ebx, BASE_HEX
 	call kprint_at
+	pop ebx
 	; Move to (0x2, 0x7)
 	mov eax, 0xA
 	mov edx, 0x2
