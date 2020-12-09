@@ -93,24 +93,36 @@ _output:
 	mov edx, 0x0
 	call output_stack_32
 
-	mov ecx, ebx
-	mov eax, 0x0
-	mov edx, 0x38
-	call output_stack_32
-	mov ecx, esi
-	mov eax, 0x1
-	mov edx, 0x38
-	call output_stack_32
-	mov ecx, edi
+	mov ecx, ecx
 	mov eax, 0x2
 	mov edx, 0x38
 	call output_stack_32
-	mov ecx, esp
+	mov ecx, ebx
+	mov eax, 0x1
+	mov edx, 0x38
+	call output_stack_32
+	mov ecx, eax
+	mov eax, 0x0
+	mov edx, 0x38
+	call output_stack_32
+	mov ecx, edx
 	mov eax, 0x3
 	mov edx, 0x38
 	call output_stack_32
-	mov ecx, ebp
+	mov ecx, esi
 	mov eax, 0x4
+	mov edx, 0x38
+	call output_stack_32
+	mov ecx, edi
+	mov eax, 0x5
+	mov edx, 0x38
+	call output_stack_32
+	mov ecx, esp
+	mov eax, 0x6
+	mov edx, 0x38
+	call output_stack_32
+	mov ecx, ebp
+	mov eax, 0x7
 	mov edx, 0x38
 	call output_stack_32
 
