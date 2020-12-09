@@ -8,21 +8,21 @@ _main:
 ; Clear the screen
 call clear_screen
 
-; Write text at (0x0, 0x1)
-mov eax, 0x1
+; Write text at (0x0, 0x0)
+mov eax, 0x0
 mov edx, 0x0
 call get_offset
 mov ebx, MSG_KERNEL_LOADED
 call kprint_at
 
-; Write text at (0x0, 0x2)
-mov eax, 0x2
+; Write text at (0x0, 0x1)
+mov eax, 0x1
 mov edx, 0x0
 call get_offset
 mov ebx, MSG_HELLO
 call kprint_at
 
-; Write text at (0x0, 0x3)
+; Write text at (0x0, 0x2)
 mov eax, 0x2
 mov edx, 0x0
 call get_offset
