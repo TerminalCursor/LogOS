@@ -5,11 +5,6 @@
 jmp _main
 _main:
 
-; Wait
-;push ebx
-;mov ebx, 0xFFFFFFFF
-;call wait_b
-
 ; Clear the screen
 call clear_screen
 
@@ -37,10 +32,10 @@ call set_cursor_offset
 mov al, 0x4C
 call kprint_ch
 ; Display 'O' at the cursor offset
-mov al, 0x4F
+mov al, 0x6F
 call kprint_ch
 ; Display 'G' at the cursor offset
-mov al, 0x47
+mov al, 0x67
 call kprint_ch
 ; Display 'O' at the cursor offset
 mov al, 0x4F
@@ -49,71 +44,53 @@ call kprint_ch
 mov al, 0x53
 call kprint_ch
 
-; Move to (0x0, 0x7)
-mov eax, 0x7
-mov edx, 0x0
-call get_offset
-mov ebx, BASE_HEX
-call kprint_at
-; Move to (0x6, 0x7)
-mov eax, 0x7
-mov edx, 0x6
-call get_offset
-call set_cursor_offset
-;; Print top of stack
-mov eax, [esp]
-call dump_stack_16
+	mov eax, 0x7
+	mov edx, 0x0
+	mov ecx, [esp]
+	call output_stack_32
 
-; Move to (0x0, 0x8)
-mov eax, 0x8
-mov edx, 0x0
-call get_offset
-mov ebx, BASE_HEX
-call kprint_at
-; Move to (0x6, 0x8)
-mov eax, 0x8
-mov edx, 0x6
-call get_offset
-call set_cursor_offset
-; Print 0xB3EF
-mov ax, 0xB3EF
-call dump_stack_16
+	mov eax, 0x8
+	mov edx, 0x0
+	mov cx, 0xB3EF
+	call output_stack_16
 
-; Move to (0x0, 0x9)
-mov eax, 0x9
-mov edx, 0x0
-call get_offset
-mov ebx, BASE_HEX
-call kprint_at
-; Move to (0x2, 0x9)
-mov eax, 0x9
-mov edx, 0x2
-call get_offset
-call set_cursor_offset
-; Print 0xD3ADB3EF
-mov eax, 0xD3ADB3EF
-call dump_stack_32
+	mov eax, 0x9
+	mov edx, 0x0
+	mov ecx, 0xD3ADB3EF
+	call output_stack_32
 
-; Move to (0x0, 0xA)
-mov eax, 0xA
-mov edx, 0x0
-call get_offset
-mov ebx, BASE_HEX
-call kprint_at
-; Move to (0x2, 0x7)
-mov eax, 0xA
-mov edx, 0x2
-call get_offset
-call set_cursor_offset
-;; Print top of stack
-mov eax, [esp]
-call dump_stack_32
+	call refresh_kbd_status
 
+	mov ecx, eax
+	mov eax, 0xA
+	mov edx, 0x0
+	call output_stack_32
+
+_lp1:
+call get_kbd_keyup
+
+cmp al, 0x90
+je _exit
+
+
+	mov ecx, eax
+	mov eax, 0xA
+	mov edx, 0x0
+	call output_stack_32
+
+	pop ecx
+	push ecx
+	mov eax, 0xB
+	mov edx, 0x0
+	call output_stack_32
 ; Wait
 push ebx
-mov ebx, 0xFFFFFFFF
+mov ebx, 0x00FFFFFF
 call wait_b
+pop ebx
+jmp _lp1
 
+_exit:
 ; Shutdown the machine
 call shutdown
 
@@ -144,6 +121,7 @@ _wait_loop:
 
 	ret
 
+	;;  Data is in ax
 dump_stack_16:
 	push ax
 
@@ -174,6 +152,7 @@ dump_stack_16:
 	pop ax
 	ret
 
+	;;  Data is in eax
 dump_stack_32:
 	push eax
 	shr eax, 0x10
@@ -187,4 +166,72 @@ c_to_i:
 	jl _chr
 	add al, 0x07
 _chr:	add al, 0x30
+	ret
+
+	;; Cursor position in (eax, edx)
+	;; Data in cx
+output_stack_16:
+	push cx
+	push eax
+	push edx
+	call get_offset
+	mov ebx, BASE_HEX
+	call kprint_at
+	; Move to (0x2, 0x7)
+	mov eax, 0xA
+	mov edx, 0x2
+	pop edx
+	add edx, 6
+	pop eax
+	call get_offset
+	call set_cursor_offset
+	;; Print top of stack
+	;; mov eax, [esp]
+	pop ax
+	call dump_stack_16
+	ret
+
+	;; Cursor position in (eax, edx)
+	;; Data in ecx
+output_stack_32:
+	push ecx
+	push eax
+	push edx
+	call get_offset
+	mov ebx, BASE_HEX
+	call kprint_at
+	; Move to (0x2, 0x7)
+	mov eax, 0xA
+	mov edx, 0x2
+	pop edx
+	add edx, 2
+	pop eax
+	call get_offset
+	call set_cursor_offset
+	;; Print top of stack
+	;; mov eax, [esp]
+	pop eax
+	call dump_stack_32
+	ret
+
+refresh_kbd_status:
+	mov cx, 0
+	.loop:
+	inc cx
+	mov dx, 0x0064
+	in al, dx
+	cmp cx, 5
+	jl .loop
+	ret
+
+get_kbd_keyup:
+	push 0x00000000
+	.loop:
+	pop eax
+	mov dx, 0x0060
+	in al, dx
+	push eax
+	and eax, 0x80
+	jz .loop
+	pop eax
 	ret
