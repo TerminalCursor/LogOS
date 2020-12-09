@@ -44,9 +44,14 @@ call kprint_ch
 mov al, 0x53
 call kprint_ch
 
-	mov eax, 0x7
+	mov eax, 0x6
 	mov edx, 0x0
 	mov ecx, [esp]
+	call output_stack_32
+
+	mov eax, 0x7
+	mov edx, 0x0
+	mov ecx, esp
 	call output_stack_32
 
 	mov eax, 0x8
@@ -67,25 +72,30 @@ call kprint_ch
 	call output_stack_32
 
 _lp1:
-call get_kbd_keyup
+	call get_kbd_keyup
 
-cmp al, 0x90
-je _exit
+	cmp al, 0x90
+	je _exit
 
-
+_output:
 	mov ecx, eax
 	mov eax, 0xA
 	mov edx, 0x0
 	call output_stack_32
 
-	pop ecx
-	push ecx
+	mov ecx, [esp]
 	mov eax, 0xB
 	mov edx, 0x0
 	call output_stack_32
+
+	mov ecx, esp
+	mov eax, 0xC
+	mov edx, 0x0
+	call output_stack_32
+
 ; Wait
 push ebx
-mov ebx, 0x00FFFFFF
+mov ebx, 0x03FFFFFF
 call wait_b
 pop ebx
 jmp _lp1
@@ -215,23 +225,20 @@ output_stack_32:
 	ret
 
 refresh_kbd_status:
-	mov cx, 0
+	;; mov cx, 0
 	.loop:
-	inc cx
+	;; inc cx
 	mov dx, 0x0064
 	in al, dx
-	cmp cx, 5
-	jl .loop
+	;; cmp cx, 5
+	test ax, 1
+	jz .loop
 	ret
 
 get_kbd_keyup:
-	push 0x00000000
 	.loop:
-	pop eax
 	mov dx, 0x0060
 	in al, dx
-	push eax
-	and eax, 0x80
+	test eax, 0x80
 	jz .loop
-	pop eax
 	ret
