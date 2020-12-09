@@ -95,23 +95,23 @@ _output:
 
 	mov ecx, ebx
 	mov eax, 0x0
-	mov edx, 0x10
+	mov edx, 0x38
 	call output_stack_32
 	mov ecx, esi
 	mov eax, 0x1
-	mov edx, 0x10
+	mov edx, 0x38
 	call output_stack_32
 	mov ecx, edi
 	mov eax, 0x2
-	mov edx, 0x10
+	mov edx, 0x38
 	call output_stack_32
-	mov edx, esp
+	mov ecx, esp
 	mov eax, 0x3
-	mov edx, 0x10
+	mov edx, 0x38
 	call output_stack_32
-	mov edx, ebp
+	mov ecx, ebp
 	mov eax, 0x4
-	mov edx, 0x10
+	mov edx, 0x38
 	call output_stack_32
 
 ; Wait
