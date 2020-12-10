@@ -5,76 +5,40 @@
 jmp _main
 _main:
 
-; Clear the screen
-call clear_screen
+	; Clear the screen
+	call clear_screen
 
-; Write text at (0x0, 0x0)
-mov eax, 0x0
-mov edx, 0x0
-call get_offset
-mov ebx, MSG_KERNEL_LOADED
-call kprint_at
-
-; Write text at (0x0, 0x1)
-mov eax, 0x1
-mov edx, 0x0
-call get_offset
-mov ebx, MSG_HELLO
-call kprint_at
-
-; Write text at (0x0, 0x2)
-mov eax, 0x2
-mov edx, 0x0
-call get_offset
-mov ebx, OS_NAME
-call kprint_at
-
-	mov eax, 0x6
+	; Write loaded message at (0x0, 0x0)
+	mov eax, 0x0
 	mov edx, 0x0
-	mov ecx, [esp]
-	call output_stack_32
+	call get_offset
+	mov ebx, MSG_KERNEL_LOADED
+	call kprint_at
 
-	mov eax, 0x7
+	; Write inital message at (0x0, 0x1)
+	mov eax, 0x1
 	mov edx, 0x0
-	mov ecx, esp
-	call output_stack_32
+	call get_offset
+	mov ebx, MSG_HELLO
+	call kprint_at
 
-	mov eax, 0x8
+	; Write OS Name at (0x0, 0x2)
+	mov eax, 0x2
 	mov edx, 0x0
-	mov cx, 0xB3EF
-	call output_stack_16
-
-	mov eax, 0x9
-	mov edx, 0x0
-	mov ecx, 0xD3ADB3EF
-	call output_stack_32
+	call get_offset
+	mov ebx, OS_NAME
+	call kprint_at
 
 	call refresh_kbd_status
 
-	mov ecx, eax
-	mov eax, 0xA
-	mov edx, 0x0
-	call output_stack_32
-
-_lp1:
+_user_input:
 	call get_kbd_keyup
-
 	cmp al, 0x90
 	je _exit
 
 _output:
 	mov ecx, eax
-	mov eax, 0xA
-	mov edx, 0x0
-	call output_stack_32
-
-	mov ecx, [esp]
-	mov eax, 0xB
-	mov edx, 0x0
-	call output_stack_32
-
-	mov ecx, esp
-	mov eax, 0xC
+	mov eax, 0x3
 	mov edx, 0x0
 	call output_stack_32
 
@@ -116,7 +80,7 @@ push ebx
 mov ebx, 0x03FFFFFF
 call wait_b
 pop ebx
-jmp _lp1
+jmp _user_input
 
 _exit:
 ; Shutdown the machine
