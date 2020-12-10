@@ -37,6 +37,9 @@ _user_input_loop:
 	call get_kbd_keyup
 	cmp al, 0x90
 	je _exit
+	cmp al, 0xAE
+	jne _output
+	call clear_screen
 
 _output:
 	;; output last keyup at (0x46, 0x9)

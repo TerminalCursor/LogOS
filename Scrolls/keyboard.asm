@@ -1,10 +1,7 @@
 refresh_kbd_status:
-	;; mov cx, 0
 	.loop:
-	;; inc cx
 	mov dx, 0x0064
 	in al, dx
-	;; cmp cx, 5
 	test ax, 1
 	jz .loop
 	ret
