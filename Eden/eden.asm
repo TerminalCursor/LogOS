@@ -50,7 +50,14 @@ _user_input_clear:
 
 _user_input_text:
 _user_input_text_loop:
-	call get_kbd_keyup
+	;; call get_kbd_keyup
+	mov dx, 0x0060
+	in al, dx
+	cmp al, [LAST_KEY]
+	je _user_input_text_loop
+	mov [LAST_KEY], al
+	test al, 0x80
+	jz _user_input_text_loop
 	cmp al, 0x81
 	je _output
 	call key_to_ascii
@@ -117,6 +124,7 @@ MSG_KERNEL_LOADED db "Eden Loaded!", 0 ; Zero Terminated String
 MSG_HELLO db "In the beginning, God created the heavens and the earth", 0
 BASE_HEX db "0x00000000", 0 ; Zero Terminated
 OS_NAME db "LogOS", 0		; Zero Terminated
+LAST_KEY db 0
 ; this is how constants are defined
 VIDEO_MEMORY equ 0xb8000
 VIDEO_MEMORY_MAX equ 0x7D0
