@@ -39,6 +39,11 @@ _user_input_loop:
 	je _exit
 
 _output:
+	;; output last keyup at (0x46, 0x9)
+	mov ecx, eax
+	mov eax, 0x9
+	mov edx, 0x46
+	call output_stack_32
 	;; Output register contents (a,b,c,d,si,di,bp,sp)
 	;;  at right edge at top of screen
 	mov ecx, ecx
@@ -71,11 +76,6 @@ _output:
 	call output_stack_32
 	mov ecx, ebp
 	mov eax, 0x7
-	mov edx, 0x46
-	call output_stack_32
-	;; output last keyup at (0x46, 0x9)
-	mov ecx, eax
-	mov eax, 0x9
 	mov edx, 0x46
 	call output_stack_32
 
