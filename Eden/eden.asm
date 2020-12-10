@@ -2,7 +2,7 @@
 [org 0x1000]
 ; using 32-bit protected mode
 [bits 32]
-jmp _main
+	jmp _main
 _main:
 
 	; Clear the screen
@@ -12,36 +12,47 @@ _main:
 	mov eax, 0x0
 	mov edx, 0x0
 	call get_offset
+	push ebx
 	mov ebx, MSG_KERNEL_LOADED
 	call kprint_at
+	pop ebx
 
 	; Write inital message at (0x0, 0x1)
 	mov eax, 0x1
 	mov edx, 0x0
 	call get_offset
+	push ebx
 	mov ebx, MSG_HELLO
 	call kprint_at
+	pop ebx
 
 	; Write OS Name at (0x0, 0x2)
 	mov eax, 0x2
 	mov edx, 0x0
 	call get_offset
+	push ebx
 	mov ebx, OS_NAME
 	call kprint_at
+	pop ebx
 
+	;; Check keyboard register polling status
 	call refresh_kbd_status
 
-_user_input:
+_user_input_loop:
+	;; Get the last key up
 	call get_kbd_keyup
 	cmp al, 0x90
 	je _exit
 
 _output:
+	;; output last keyup at (0x0, 0x3)
 	mov ecx, eax
 	mov eax, 0x3
 	mov edx, 0x0
 	call output_stack_32
 
+	;; Output register contents (a,b,c,d,si,di,bp,sp)
+	;;  at right edge at top of screen
 	mov ecx, ecx
 	mov eax, 0x2
 	mov edx, 0x38
@@ -75,19 +86,19 @@ _output:
 	mov edx, 0x38
 	call output_stack_32
 
-; Wait
-push ebx
-mov ebx, 0x03FFFFFF
-call wait_b
-pop ebx
-jmp _user_input
+	;; Wait
+	push ebx
+	mov ebx, 0x03FFFFFF
+	call wait_b
+	pop ebx
+	jmp _user_input_loop
 
 _exit:
-; Shutdown the machine
-call shutdown
+	;; Shutdown the machine
+	call shutdown
 
-; If the shutdown failed, return to bootloader (which goes to inf loop)
-ret
+	;; If the shutdown failed, return to bootloader (which goes to inf loop)
+	ret
 
 ; Messages
 MSG_KERNEL_LOADED db "Eden Loaded!", 0 ; Zero Terminated String
