@@ -12,28 +12,22 @@ _main:
 	mov eax, 0x0
 	mov edx, 0x0
 	call get_offset
-	push ebx
 	mov ebx, MSG_KERNEL_LOADED
 	call kprint_at
-	pop ebx
 
 	; Write inital message at (0x0, 0x1)
 	mov eax, 0x1
 	mov edx, 0x0
 	call get_offset
-	push ebx
 	mov ebx, MSG_HELLO
 	call kprint_at
-	pop ebx
 
 	; Write OS Name at (0x0, 0x2)
 	mov eax, 0x2
 	mov edx, 0x0
 	call get_offset
-	push ebx
 	mov ebx, OS_NAME
 	call kprint_at
-	pop ebx
 
 	;; Check keyboard register polling status
 	call refresh_kbd_status
@@ -87,10 +81,8 @@ _output:
 	call output_stack_32
 
 	;; Wait
-	push ebx
 	mov ebx, 0x03FFFFFF
 	call wait_b
-	pop ebx
 	jmp _user_input_loop
 
 _exit:
