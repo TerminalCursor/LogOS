@@ -31,6 +31,7 @@ _main:
 
 	;; Check keyboard register polling status
 	call refresh_kbd_status
+	jmp _output
 
 _user_input_loop:
 	;; Get the last key up
@@ -38,8 +39,25 @@ _user_input_loop:
 	cmp al, 0x90
 	je _exit
 	cmp al, 0xAE
-	jne _output
+	je _user_input_clear
+	cmp al, 0x94
+	je _user_input_text
+	jmp _output
+
+_user_input_clear:
 	call clear_screen
+	jmp _output
+
+_user_input_text:
+_user_input_text_loop:
+	call get_kbd_keyup
+	cmp al, 0x81
+	je _output
+	call key_to_ascii
+	test cl, 1
+	jnz _user_input_text_loop
+	call kprint_ch
+	jmp _user_input_text_loop
 
 _output:
 	;; output last keyup at (0x46, 0x9)
