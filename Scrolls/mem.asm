@@ -1,5 +1,9 @@
 ; Copy eax length of memory at addess edx to address ecx
 mem_cpy:
+	push eax
+	push edx
+	push ecx
+
 _mem_cpy_loop:
 	push eax		; Save eax - length of remaining memory to copy
 	mov al, BYTE [edx]	; Get the source byte
@@ -9,5 +13,9 @@ _mem_cpy_loop:
 	inc ecx			; Get next address
 	dec eax			; One less byte to copy
 	jnz _mem_cpy_loop	; Loop until no more bytes to copy
+
+	pop ecx
+	pop edx
+	pop eax
 
 	ret

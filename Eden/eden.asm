@@ -23,7 +23,7 @@ _main:
 	call kprint_at
 
 	; Write OS Name at (0x0, 0x2)
-	mov eax, 0x17
+	mov eax, 0x18
 	mov edx, 0x4F
 	call get_offset
 	mov ebx, OS_NAME

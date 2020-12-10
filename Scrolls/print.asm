@@ -42,7 +42,10 @@ _kprint_ch_done:
 	ret
 
 _check_bounds:
+	push eax
 	push ebx
+	push ecx
+	push edx
 _check_loop:
 	call get_cursor_position; Get the cursor location
 	cmp eax, 25		; Check to see if it is out of the video memory
@@ -55,7 +58,10 @@ _check_loop:
 	jmp _check_loop		; Check to see if we are back in video memory
 
 _check_done:
+	pop edx
+	pop ecx
 	pop ebx
+	pop eax
 
 	ret
 
