@@ -23,3 +23,10 @@ _screen_clear_loop:
 
 	popa
 	ret
+
+wait_b:
+_wait_loop:
+	sub ebx, 1
+	jnz _wait_loop
+
+	ret

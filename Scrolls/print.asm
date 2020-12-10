@@ -65,3 +65,100 @@ _check_done:
 	pop eax
 
 	ret
+
+	;;  Data is in ax
+dump_stack_16:
+	push ax
+
+	pop ax
+	sub esp, 2
+	and ax, 0xF000
+	shr ax, 0xC
+	call c_to_i
+	call kprint_ch
+	pop ax
+	sub esp, 2
+	and ax, 0xF00
+	shr ax, 0x8
+	call c_to_i
+	call kprint_ch
+	pop ax
+	sub esp, 2
+	and al, 0xF0
+	shr al, 0x4
+	call c_to_i
+	call kprint_ch
+	pop ax
+	sub esp, 2
+	and al, 0xF
+	call c_to_i
+	call kprint_ch
+
+	pop ax
+	ret
+
+	;;  Data is in eax
+dump_stack_32:
+	push eax
+	shr eax, 0x10
+	call dump_stack_16
+	pop eax
+	call dump_stack_16
+	ret
+
+c_to_i:
+	cmp al, 0x0A
+	jl _chr
+	add al, 0x07
+_chr:	add al, 0x30
+	ret
+
+	;; Cursor position in (eax, edx)
+	;; Data in cx
+output_stack_16:
+	push cx
+	push eax
+	push edx
+	call get_offset
+	push ebx
+	mov ebx, BASE_HEX
+	call kprint_at
+	pop ebx
+	; Move to (0x2, 0x7)
+	mov eax, 0xA
+	mov edx, 0x2
+	pop edx
+	add edx, 6
+	pop eax
+	call get_offset
+	call set_cursor_offset
+	;; Print top of stack
+	;; mov eax, [esp]
+	pop ax
+	call dump_stack_16
+	ret
+
+	;; Cursor position in (eax, edx)
+	;; Data in ecx
+output_stack_32:
+	push ecx
+	push eax
+	push edx
+	call get_offset
+	push ebx
+	mov ebx, BASE_HEX
+	call kprint_at
+	pop ebx
+	; Move to (0x2, 0x7)
+	mov eax, 0xA
+	mov edx, 0x2
+	pop edx
+	add edx, 2
+	pop eax
+	call get_offset
+	call set_cursor_offset
+	;; Print top of stack
+	;; mov eax, [esp]
+	pop eax
+	call dump_stack_32
+	ret
