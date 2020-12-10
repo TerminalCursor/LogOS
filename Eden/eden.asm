@@ -50,14 +50,7 @@ _user_input_clear:
 
 _user_input_text:
 _user_input_text_loop:
-	;; call get_kbd_keyup
-	mov dx, 0x0060
-	in al, dx
-	cmp al, [LAST_KEY]
-	je _user_input_text_loop
-	mov [LAST_KEY], al
-	test al, 0x80
-	jz _user_input_text_loop
+	call get_kbd_keyup
 	cmp al, 0x81
 	je _output
 	call key_to_ascii
