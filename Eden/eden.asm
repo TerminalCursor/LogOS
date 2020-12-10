@@ -23,8 +23,8 @@ _main:
 	call kprint_at
 
 	; Write OS Name at (0x0, 0x2)
-	mov eax, 0x2
-	mov edx, 0x0
+	mov eax, 0x18
+	mov edx, 0x4F
 	call get_offset
 	mov ebx, OS_NAME
 	call kprint_at
@@ -37,6 +37,9 @@ _user_input_loop:
 	call get_kbd_keyup
 	cmp al, 0x90
 	je _exit
+	cmp al, 0xAE
+	jne _output
+	call clear_screen
 
 _output:
 	;; output last keyup at (0x46, 0x9)

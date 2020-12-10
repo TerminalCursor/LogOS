@@ -1,8 +1,5 @@
 scroll_up:
-	push eax
 	push ebx
-	push ecx
-	push edx
 
 	mov eax, 0xA0		; 2 * 0x50 since there is both text and attribute data
 	mov ecx, VIDEO_MEMORY	; Start at beginning of video memory
@@ -26,9 +23,6 @@ _new_line_loop:
 	dec ebx			; Finished one text character
 	jnz _new_line_loop	; If we have more text to write, loop it again
 
-	pop edx
-	pop ecx
 	pop ebx
-	pop eax
 
 	ret
