@@ -39,45 +39,44 @@ _user_input_loop:
 	je _exit
 
 _output:
-	;; output last keyup at (0x0, 0x3)
-	mov ecx, eax
-	mov eax, 0x3
-	mov edx, 0x0
-	call output_stack_32
-
 	;; Output register contents (a,b,c,d,si,di,bp,sp)
 	;;  at right edge at top of screen
 	mov ecx, ecx
 	mov eax, 0x2
-	mov edx, 0x38
+	mov edx, 0x46
 	call output_stack_32
 	mov ecx, ebx
 	mov eax, 0x1
-	mov edx, 0x38
+	mov edx, 0x46
 	call output_stack_32
 	mov ecx, eax
 	mov eax, 0x0
-	mov edx, 0x38
+	mov edx, 0x46
 	call output_stack_32
 	mov ecx, edx
 	mov eax, 0x3
-	mov edx, 0x38
+	mov edx, 0x46
 	call output_stack_32
 	mov ecx, esi
 	mov eax, 0x4
-	mov edx, 0x38
+	mov edx, 0x46
 	call output_stack_32
 	mov ecx, edi
 	mov eax, 0x5
-	mov edx, 0x38
+	mov edx, 0x46
 	call output_stack_32
 	mov ecx, esp
 	mov eax, 0x6
-	mov edx, 0x38
+	mov edx, 0x46
 	call output_stack_32
 	mov ecx, ebp
 	mov eax, 0x7
-	mov edx, 0x38
+	mov edx, 0x46
+	call output_stack_32
+	;; output last keyup at (0x46, 0x9)
+	mov ecx, eax
+	mov eax, 0x9
+	mov edx, 0x46
 	call output_stack_32
 
 	;; Wait
