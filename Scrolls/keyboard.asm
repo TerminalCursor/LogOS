@@ -7,16 +7,23 @@ refresh_kbd_status:
 	ret
 
 get_kbd_keyup:
-	.down.loop:
 	mov dx, 0x0060
 	in al, dx
-	test eax, 0x80
-	jnz .down.loop
-	.loop:
-	mov dx, 0x0060
-	in al, dx
-	test eax, 0x80
-	jz .loop
+	cmp al, [LAST_KEY]
+	je get_kbd_keyup
+	mov [LAST_KEY], al
+	test al, 0x80
+	jz get_kbd_keyup
+	;; .down.loop:
+	;; mov dx, 0x0060
+	;; in al, dx
+	;; test eax, 0x80
+	;; jnz .down.loop
+	;; .loop:
+	;; mov dx, 0x0060
+	;; in al, dx
+	;; test eax, 0x80
+	;; jz .loop
 	ret
 
 key_to_ascii:
