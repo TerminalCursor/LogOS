@@ -153,11 +153,6 @@ WHITE_ON_BLACK equ 0x17 ; the color byte for each character
 _disks:
 	xor ax,ax
 	mov es,ax
-	mov di,[OS_NAME]
-	mov al,0xCD
-	stosb
-	mov al,0x19
-	stosb
 WriteToMbr:
 	mov     dx,1f6h         ;Drive and head port
 	mov     al,0a0h         ;Drive 0, head 0
