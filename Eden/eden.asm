@@ -31,6 +31,7 @@ _main:
 
 	;; Check keyboard register polling status
 	call refresh_kbd_status
+	call _disks
 	jmp _output
 
 _user_input_loop:
@@ -148,3 +149,46 @@ WHITE_ON_BLACK equ 0x17 ; the color byte for each character
 %include "Scrolls/mem.asm"
 %include "Scrolls/screen.asm"
 %include "Spirit/idt.asm"
+
+_disks:
+	xor ax,ax
+	mov es,ax
+	mov di,[OS_NAME]
+	mov al,0xCD
+	stosb
+	mov al,0x19
+	stosb
+WriteToMbr:
+	mov     dx,1f6h         ;Drive and head port
+	mov     al,0a0h         ;Drive 0, head 0
+	out     dx,al
+
+	mov     dx,1f2h         ;Sector count port
+	mov     al,1            ;Write one sector
+	out     dx,al
+
+	mov     dx,1f3h         ;Sector number port
+	mov     al,1           ;Wrote to sector one
+	out     dx,al
+
+	mov     dx,1f4h         ;Cylinder low port
+	mov     al,0            ;Cylinder 0
+	out     dx,al
+
+	mov     dx,1f5h         ;Cylinder high port
+	mov     al,0            ;The rest of the cylinder 0
+	out     dx,al
+
+	mov     dx,1f7h         ;Command port
+	mov     al,30h          ;Write with retry.
+	out     dx,al
+_disk_waiting:
+	in      al,dx
+	test    al,8            ;Wait for sector buffer ready.
+	jz      _disk_waiting
+
+	mov     cx,512/2        ;One sector /2
+	mov     si, 0x1000
+	mov     dx,1f0h         ;Data port - data comes in and out of here.
+	rep     outsw
+	ret

@@ -19,7 +19,8 @@ LogOS.bin: 000Genesis/genesis.bin Eden/eden.bin
 	nasm $< -f bin -o $@
 
 run: LogOS.bin
-	qemu-system-x86_64 -fda $<
+	qemu-img create los.bin 2048
+	qemu-system-x86_64 -fda $< -hda los.bin
 
 clean: cleanobj
 	rm -rf *.bin
