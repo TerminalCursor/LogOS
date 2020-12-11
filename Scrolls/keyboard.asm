@@ -1,14 +1,14 @@
 refresh_kbd_status:
 	.loop:
 	mov dx, 0x0064
-	in al, dx
+	in eax, dx
 	test ax, 1
 	jz .loop
 	ret
 
 get_kbd_keyup:
 	mov dx, 0x0060
-	in al, dx
+	in eax, dx
 	cmp al, [LAST_KEY]
 	je get_kbd_keyup
 	mov [LAST_KEY], al

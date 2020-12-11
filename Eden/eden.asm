@@ -42,6 +42,15 @@ _user_input_loop:
 	je _user_input_clear
 	cmp al, 0x94
 	je _user_input_text
+	cmp al, 0x97
+	jne _output
+	mov eax, [PORT]
+	add eax, 4
+	test eax, 4
+	jnz _user_input_exit_f
+	add eax, 8
+_user_input_exit_f:
+	mov [PORT], eax
 	jmp _output
 
 _user_input_clear:
@@ -63,6 +72,13 @@ _output:
 	;; output last keyup at (0x46, 0x9)
 	mov ecx, eax
 	mov eax, 0x9
+	mov edx, 0x46
+	call output_stack_32
+	;; output port to (0x46, 0x9)
+	mov dx, [PORT]
+	in eax, dx
+	mov ecx, eax
+	mov eax, 0xA
 	mov edx, 0x46
 	call output_stack_32
 	;; Output register contents (a,b,c,d,si,di,bp,sp)
@@ -118,6 +134,7 @@ MSG_HELLO db "In the beginning, God created the heavens and the earth", 0
 BASE_HEX db "0x00000000", 0 ; Zero Terminated
 OS_NAME db "LogOS", 0		; Zero Terminated
 LAST_KEY db 0
+PORT dw 0x0000
 ; this is how constants are defined
 VIDEO_MEMORY equ 0xb8000
 VIDEO_MEMORY_MAX equ 0x7D0
